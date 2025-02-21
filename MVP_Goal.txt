@@ -1,0 +1,9 @@
+🎯 MVP Goal
+
+Launch a minimal but functional version of YourSport that allows teams to:
+
+✅ Create & manage teams
+✅ Host matches and find opponents
+✅ Set match details (time, location, type)
+✅ Manage tournaments
+✅ Chat with opponents

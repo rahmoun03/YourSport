@@ -1,0 +1,4 @@
+🔜 Next Steps After MVP
+🔹 AI-powered opponent suggestions
+🔹 Mobile app version (React Native)
+🔹 Sponsorship & monetization features

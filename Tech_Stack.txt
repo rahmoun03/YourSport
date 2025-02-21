@@ -1,0 +1,17 @@
+🛠️ MVP Tech Stack & Architecture
+Frontend (User Interface)
+✅ Framework: React (Next.js)
+✅ Styling: TailwindCSS
+✅ State Management: Zustand
+✅ Real-Time Updates: WebSockets (via Django Channels)
+
+Backend (API & Business Logic)
+✅ Framework: Django + Django Rest Framework (DRF)
+✅ Real-Time Support: Django Channels (WebSockets for chat & matchmaking)
+✅ Database: PostgreSQL (for structured data)
+✅ Caching: Redis (for matchmaking & real-time features)
+
+Cloud & Deployment
+✅ File Storage: AWS S3 or Firebase Storage (for team logos & media)
+✅ Hosting: Vercel (Frontend) + Railway/Render (Backend)
+✅ CI/CD: GitLab CI/CD
