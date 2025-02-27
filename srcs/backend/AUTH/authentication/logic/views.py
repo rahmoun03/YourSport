@@ -17,6 +17,7 @@ def register(req):
         serial.validated_data['password'] = hash_pass.decode('ASCII')
         tokens = generate_tokens(serial.validated_data['email'])
         tokens_serial = tokens_db_serial(data=tokens)
+        #TODO Send Verefication's email 
         if tokens_serial.is_valid():
             tokens_serial.save()
         serial.save()
@@ -35,8 +36,8 @@ def login(req):
         return response.Response(
             {
                 'active_user': user.activation,
-                'access_token': user_tokens.access_token,
-                'refresh_token': user_tokens.refresh_token
+                'Access-Token': user_tokens.access_token,
+                'Refresh-Token': user_tokens.refresh_token
             }, status=status.HTTP_200_OK)
     return response.Response({'error': 'Invalid Password'}, status=status.HTTP_404_NOT_FOUND)
 
