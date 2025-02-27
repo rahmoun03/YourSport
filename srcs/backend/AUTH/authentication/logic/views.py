@@ -42,8 +42,9 @@ def login(req):
 
 @decorators.api_view(['GET'])
 def get_profile_data(req):
+    print(req.headers)
     try:
-        user_data = is_auth_user(req.data.get('access_token'), req.data.get('refresh_token'))
+        user_data = is_auth_user(req.headers.get('Access-Token'), req.headers.get('Refresh-Token'))
     except Exception as error:
         return response.Response({'Authentication': 'Permission Needed'}, status=status.HTTP_404_NOT_FOUND)
     infos = auth_db.objects.get(email=user_data.identity)
