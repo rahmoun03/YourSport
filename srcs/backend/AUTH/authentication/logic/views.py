@@ -11,7 +11,7 @@ def register(req):
     serial = auth_db_serial(data=req.data)
     if serial.is_valid():
         password_status = validate_passwd(serial.validated_data['password'])
-        if (password_status is not 'Strong'):
+        if (password_status != 'Strong'):
             return response.Response({'Weak Password': password_status}, status=status.HTTP_400_BAD_REQUEST)
         hash_pass = bcrypt.hashpw(serial.validated_data['password'].encode('ASCII'), bcrypt.gensalt())
         serial.validated_data['password'] = hash_pass.decode('ASCII')

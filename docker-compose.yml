@@ -1,58 +1,25 @@
-version: "3.8"
 
 services:
-  frontend:
-    build: ./frontend
+  auth:
+    container_name: authentication
+    build: ./srcs/backend/AUTH
+    image: authimg
+    init: true
+    networks:
+      - net
+  
+  nginx:
+    container_name: nginx
+    build: ./srcs/reverse_proxy
+    image: nginximg
     ports:
-      - "3000:3000"
+      - '21212:80'
     depends_on:
-      - backend
-    volumes:
-      -./frontend:/app
+      - auth
+    init: true
     networks:
-      - yoursport_network
-
-  backend:
-    build: ./backend
-    command: gunicorn backend.wsgi:application --bind 0.0.0.0:8000
-    volumes:
-      - ./backend:/app
-    ports:
-      - "8000:8000"
-    depends_on:
-      - db
-      - redis
-    environment:
-      - DJANGO_SETTINGS_MODULE=backend.settings
-      - DATABASE_URL=postgres://youruser:yourpassword@db:5432/yourdb
-      - REDIS_URL=redis://redis:6379
-      - CLOUDINARY_URL=your_cloudinary_url
-    networks:
-      - yoursport_network
-
-  db:
-    image: postgres:15
-    restart: always
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    environment:
-      POSTGRES_DB: yourdb
-      POSTGRES_USER: youruser
-      POSTGRES_PASSWORD: yourpassword
-    ports:
-      - "5432:5432"
-    networks:
-      - yoursport_network
-
-  redis:
-    image: redis:alpine
-    restart: always
-    networks:
-      - yoursport_network
-
-volumes:
-  postgres_data:
+      - net
 
 networks:
-  yoursport_network:
-    driver: bridge
+  net:
+    name: yoursport_network
