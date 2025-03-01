@@ -13,10 +13,9 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from pathlib import Path
 from dotenv import load_dotenv
 import os
+
 #load .env
 load_dotenv()
-
-
 
 #SMTP SetUp
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
