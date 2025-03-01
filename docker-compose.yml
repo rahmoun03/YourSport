@@ -1,33 +1,25 @@
-version: "3.8"
 
 services:
-  frontend:
-    build: ./frontend
+  auth:
+    container_name: authentication
+    build: ./srcs/backend/AUTH
+    image: authimg
+    init: true
+    networks:
+      - net
+  
+  nginx:
+    container_name: nginx
+    build: ./srcs/reverse_proxy
+    image: nginximg
     ports:
-      - "3000:3000"
+      - '21212:80'
     depends_on:
-      - backend
-    volumes:
-      -./frontend:/app
+      - auth
+    init: true
     networks:
-      - yoursport_network
-
-  authapp:
-    build: ./backend/authapp
-    command: python manage.py runserver
-    volumes:
-      - ./backend/authapp:/app
-    ports:
-      - "8000:8000"
-    environment:
-      - DJANGO_SETTINGS_MODULE=backend.settings
-    networks:
-      - yoursport_network
-
-
-volumes:
-  postgres_data:
+      - net
 
 networks:
-  yoursport_network:
-    driver: bridge
+  net:
+    name: yoursport_network
