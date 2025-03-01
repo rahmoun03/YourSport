@@ -4,9 +4,11 @@ from .models import auth_db, tokens_db
 import bcrypt
 from django.core import mail
 from django.conf import settings
+from django.utils.html import strip_tags
 from .validat_pass import validate_passwd
 from .get_token import generate_tokens
 from .access_check import is_auth_user
+from .verification_code import create_code
 
 @decorators.api_view(["POST"])
 def register(req):
@@ -27,7 +29,7 @@ def register(req):
             tokens_serial.save()
         try:
             print(f"My Email: {settings.EMAIL_HOST_USER}")
-            mail.send_mail('Verify your account now', '010101',
+            mail.send_mail('YourSport - Verify your account now', create_code(),
                            settings.EMAIL_HOST_USER, [serial.validated_data['email']])
         except Exception as e:
             print(f"Failed Cuase: {e}")
