@@ -12,43 +12,18 @@ services:
     networks:
       - yoursport_network
 
-  backend:
-    build: ./backend
-    command: gunicorn backend.wsgi:application --bind 0.0.0.0:8000
+  authapp:
+    build: ./backend/authapp
+    command: python manage.py runserver
     volumes:
-      - ./backend:/app
+      - ./backend/authapp:/app
     ports:
       - "8000:8000"
-    depends_on:
-      - db
-      - redis
     environment:
       - DJANGO_SETTINGS_MODULE=backend.settings
-      - DATABASE_URL=postgres://youruser:yourpassword@db:5432/yourdb
-      - REDIS_URL=redis://redis:6379
-      - CLOUDINARY_URL=your_cloudinary_url
     networks:
       - yoursport_network
 
-  db:
-    image: postgres:15
-    restart: always
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    environment:
-      POSTGRES_DB: yourdb
-      POSTGRES_USER: youruser
-      POSTGRES_PASSWORD: yourpassword
-    ports:
-      - "5432:5432"
-    networks:
-      - yoursport_network
-
-  redis:
-    image: redis:alpine
-    restart: always
-    networks:
-      - yoursport_network
 
 volumes:
   postgres_data:
