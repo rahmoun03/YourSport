@@ -2,6 +2,8 @@ from rest_framework import status, response, decorators
 from .serializers import auth_db_serial, tokens_db_serial
 from .models import auth_db, tokens_db
 import bcrypt
+from django.core import mail
+from django.conf import settings
 from .validat_pass import validate_passwd
 from .get_token import generate_tokens
 from .access_check import is_auth_user
@@ -10,16 +12,26 @@ from .access_check import is_auth_user
 def register(req):
     serial = auth_db_serial(data=req.data)
     if serial.is_valid():
+
         password_status = validate_passwd(serial.validated_data['password'])
         if (password_status != 'Strong'):
-            return response.Response({'Weak Password': password_status}, status=status.HTTP_400_BAD_REQUEST)
+            return response.Response({'Weak Password': password_status},
+                                     status=status.HTTP_400_BAD_REQUEST)
+        
         hash_pass = bcrypt.hashpw(serial.validated_data['password'].encode('ASCII'), bcrypt.gensalt())
         serial.validated_data['password'] = hash_pass.decode('ASCII')
         tokens = generate_tokens(serial.validated_data['email'])
         tokens_serial = tokens_db_serial(data=tokens)
-        #TODO Send Verefication's email 
         if tokens_serial.is_valid():
             tokens_serial.save()
+        try:
+            print(f"My Email: {settings.EMAIL_HOST_USER}")
+            mail.send_mail('Verify your account now', '010101',
+                           settings.EMAIL_HOST_USER, [serial.validated_data['email']])
+        except Exception as e:
+            print(f"Failed Cuase: {e}")
+            return response.Response({'Verefication': 'Fail to send the verefication mail'},
+                                     status=status.HTTP_504_GATEWAY_TIMEOUT)
         serial.save()
         return response.Response(status=status.HTTP_201_CREATED)
     return response.Response(serial.errors, status=status.HTTP_400_BAD_REQUEST)
