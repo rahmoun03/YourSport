@@ -18,7 +18,8 @@ def register(req):
             return response.Response({'Weak Password': password_status},
                                      status=status.HTTP_400_BAD_REQUEST)
         
-        hash_pass = bcrypt.hashpw(serial.validated_data['password'].encode('ASCII'), bcrypt.gensalt())
+        hash_pass = bcrypt.hashpw(serial.validated_data['password'].encode('ASCII'),
+                                  bcrypt.gensalt())
         serial.validated_data['password'] = hash_pass.decode('ASCII')
         tokens = generate_tokens(serial.validated_data['email'])
         tokens_serial = tokens_db_serial(data=tokens)
@@ -59,7 +60,8 @@ def get_profile_data(req):
     try:
         user_data = is_auth_user(req.headers.get('Access-Token'), req.headers.get('Refresh-Token'))
     except Exception as error:
-        return response.Response({'Authentication': 'Permission Needed'}, status=status.HTTP_404_NOT_FOUND)
+        return response.Response({'Authentication': 'Permission Needed'},
+                                 status=status.HTTP_404_NOT_FOUND)
     infos = auth_db.objects.get(email=user_data.identity)
     res = {'email': infos.email, 'activation': infos.activation}
     return response.Response(res, status=status.HTTP_200_OK)
