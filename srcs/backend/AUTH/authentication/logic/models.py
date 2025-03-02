@@ -11,6 +11,10 @@ class tokens_db(models.Model):
     refresh_token = models.CharField(max_length=10000, unique=True)
     identity = models.EmailField(unique=True, null=False, primary_key=True)
 
+class verificationSystem(models.Model):
+    identity = models.EmailField(unique=True, null=False, primary_key=True)
+    ActivationCode = models.CharField(unique=True, null=False)
+
 class informations(models.Model):
     identity = models.EmailField(unique=True, null=False, primary_key=True)
     username = models.CharField(max_length=50)
