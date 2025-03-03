@@ -6,6 +6,7 @@ RUN pip install --upgrade pip
 RUN pip install django
 RUN pip install django_rest_framework
 RUN pip install bcrypt
+RUN pip install dotenv
 COPY ./authentication .
 COPY ./deploy/run.sh .
 RUN chmod +x run.sh

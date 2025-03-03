@@ -16,7 +16,7 @@ services:
       - ./srcs/frontend:/app
     networks:
       - net
-  
+
   nginx:
     container_name: nginx
     build: ./srcs/reverse_proxy
