@@ -12,4 +12,4 @@ def create_code():
         Best Regard
         YourSport Team.
     '''
-    return tmplate
+    return {'template': tmplate, 'code': code}

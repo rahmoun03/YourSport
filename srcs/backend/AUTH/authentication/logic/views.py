@@ -1,10 +1,9 @@
 from rest_framework import status, response, decorators
-from .serializers import auth_db_serial, tokens_db_serial
-from .models import auth_db, tokens_db
+from .serializers import auth_db_serial, tokens_db_serial, verify_serializer
+from .models import auth_db, tokens_db, verificationSystem
 import bcrypt
 from django.core import mail
 from django.conf import settings
-from django.utils.html import strip_tags
 from .validat_pass import validate_passwd
 from .get_token import generate_tokens
 from .access_check import is_auth_user
@@ -28,11 +27,19 @@ def register(req):
         if tokens_serial.is_valid():
             tokens_serial.save()
         try:
-            print(f"My Email: {settings.EMAIL_HOST_USER}")
-            mail.send_mail('YourSport - Verify your account now', create_code(),
+            Template = create_code()
+            verification_serial = verify_serializer(data={
+                                            'identity': serial.validated_data['email'],
+                                            'ActivationCode': Template.get('code') })
+            if verification_serial.is_valid():
+                verification_serial.save()
+            else:
+                return response.Response(verification_serial.errors,
+                                         status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            mail.send_mail('YourSport - Verify your account now', Template.get('template'),
                            settings.EMAIL_HOST_USER, [serial.validated_data['email']])
         except Exception as e:
-            print(f"Failed Cuase: {e}")
+            print(f"RED: Failed Cuase: {e}")
             return response.Response({'Verefication': 'Fail to send the verefication mail'},
                                      status=status.HTTP_504_GATEWAY_TIMEOUT)
         serial.save()
@@ -40,21 +47,50 @@ def register(req):
     return response.Response(serial.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @decorators.api_view(["POST"])
+def verification(req):
+    try:
+        user = verificationSystem.objects.get(identity=req.data.get('email'))
+        code = req.data.get('verification_code')
+        if code is None:
+            raise Exception("")
+        if user.ActivationCode == req.data.get('verification_code'):
+            activateUser = auth_db.objects.get(email=user.identity)
+            activateUser.activation = True
+            activateUser.save()
+            user.delete()
+            return response.Response({
+                'Activation': 'Succefull Activation', 'Email': activateUser.email},
+                status=status.HTTP_200_OK)
+        else:
+            return response.Response({'verification_code': 'Invalid Code'},
+                                     status=status.HTTP_400_BAD_REQUEST)
+    except:
+        pass
+    return response.Response({'Activation Failed': 'Invalid Information',
+                              'identity': 'This Field Reqiured',
+                              'verification_code': 'This Field Reqiured'
+                              }
+                              , status=status.HTTP_400_BAD_REQUEST)
+
+@decorators.api_view(["POST"])
 def login(req):
     try:
         email, password = req.data.get('email'), req.data.get('password').encode('ASCII')
         user = auth_db.objects.get(email=email)
+        if user.activation == False:
+            return response.Response({'email': 'Email Activation Required'},
+                                     status=status.HTTP_401_UNAUTHORIZED)
+        if bcrypt.checkpw(password, user.password.encode('ASCII')):
+            user_tokens = tokens_db.objects.get(identity=email)
+            return response.Response(
+                {
+                    'active_user': user.activation,
+                    'Access-Token': user_tokens.access_token,
+                    'Refresh-Token': user_tokens.refresh_token
+                }, status=status.HTTP_200_OK)
     except:
-        return response.Response({'error': 'Invalid Email'}, status=status.HTTP_404_NOT_FOUND)
-    if bcrypt.checkpw(password, user.password.encode('ASCII')):
-        user_tokens = tokens_db.objects.get(identity=email)
-        return response.Response(
-            {
-                'active_user': user.activation,
-                'Access-Token': user_tokens.access_token,
-                'Refresh-Token': user_tokens.refresh_token
-            }, status=status.HTTP_200_OK)
-    return response.Response({'error': 'Invalid Password'}, status=status.HTTP_404_NOT_FOUND)
+        pass
+    return response.Response({'Error': 'Invalid Informations'}, status=status.HTTP_404_NOT_FOUND)
 
 @decorators.api_view(['GET'])
 def get_profile_data(req):
@@ -65,5 +101,5 @@ def get_profile_data(req):
         return response.Response({'Authentication': 'Permission Needed'},
                                  status=status.HTTP_404_NOT_FOUND)
     infos = auth_db.objects.get(email=user_data.identity)
-    res = {'email': infos.email, 'activation': infos.activation}
-    return response.Response(res, status=status.HTTP_200_OK)
+    return response.Response({'Email': infos.email,'Activation': infos.activation},
+                             status=status.HTTP_200_OK)

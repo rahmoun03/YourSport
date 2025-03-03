@@ -1,5 +1,5 @@
 from django.db import models
-import datetime
+from django.utils import timezone
 
 class auth_db(models.Model):
     email = models.EmailField(unique=True, null=False, primary_key=True)
@@ -13,7 +13,7 @@ class tokens_db(models.Model):
 
 class verificationSystem(models.Model):
     identity = models.EmailField(unique=True, null=False, primary_key=True)
-    ActivationCode = models.CharField(unique=True, null=False)
+    ActivationCode = models.CharField(max_length=8,null=False)
 
 class informations(models.Model):
     identity = models.EmailField(unique=True, null=False, primary_key=True)
@@ -21,6 +21,6 @@ class informations(models.Model):
     firstname = models.CharField(max_length=50)
     lastname = models.CharField(max_length=50)
     age = models.IntegerField(null=False)
-    create_at = models.DateField(default=datetime.datetime.now())
+    create_at = models.DateField(default=timezone.now)
     favorite_game = models.CharField(max_length=50)
     team = models.CharField(max_length=50)
