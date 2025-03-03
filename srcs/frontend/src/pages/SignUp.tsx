@@ -1,20 +1,44 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
+
+const API_URL = '/auth/api/sign_up';
+
 const SignUp = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (password !== confirmPassword) {
       alert("Passwords do not match");
       return;
     }
     console.log("Signing up with", { name, email, password });
+
+
     // Add sign-up logic here
+    try {
+      
+      const response = await fetch(API_URL, {
+        method: "POST",
+        body: JSON.stringify({
+          'email' : email,
+          'password' : password
+        })
+      });
+      if (!response.ok)
+        throw new Error("from backend ,Error status : " + response.status);
+      
+      const json = response.json();
+      console.log(json);
+
+    } catch(e) {
+      console.log(e.message);
+      
+    }
   };
 
   return (

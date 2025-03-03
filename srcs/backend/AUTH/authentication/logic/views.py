@@ -8,6 +8,7 @@ from .access_check import is_auth_user
 
 @decorators.api_view(["POST"])
 def register(req):
+    print(f"request : {req.data}", flush=True)
     serial = auth_db_serial(data=req.data)
     if serial.is_valid():
         password_status = validate_passwd(serial.validated_data['password'])
@@ -26,6 +27,7 @@ def register(req):
 
 @decorators.api_view(["POST"])
 def login(req):
+    print(f"request : {req.data}", flush=True)
     try:
         email, password = req.data.get('email'), req.data.get('password').encode('ASCII')
         user = auth_db.objects.get(email=email)

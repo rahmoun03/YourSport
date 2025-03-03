@@ -7,6 +7,15 @@ services:
     init: true
     networks:
       - net
+  frontend:
+    container_name: frontend
+    build: ./srcs/frontend
+    image: frontendimg
+    init: true
+    volumes:
+      - ./srcs/frontend:/app
+    networks:
+      - net
   
   nginx:
     container_name: nginx
@@ -16,7 +25,10 @@ services:
       - '21212:80'
     depends_on:
       - auth
+      - frontend
     init: true
+    volumes:
+      - ./srcs/frontend/dist:/usr/share/nginx/html/
     networks:
       - net
 

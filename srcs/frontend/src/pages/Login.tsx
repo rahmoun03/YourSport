@@ -2,14 +2,36 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 
 
+const API_URL = `/auth/api/sign_in`;
+
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Logging in with", { email, password });
+
     // Add login logic here
+    try {
+
+      const response = await fetch(API_URL, {
+        method: 'POST',
+        body: JSON.stringify({
+          'email':email,
+          'password':password
+        })
+      });
+
+      if (!response.ok)
+        throw new Error(`Response status : ${response.status}`);
+
+      const json = await response.json();
+      console.log(json);
+        
+    } catch (e) {
+      console.error(e.message);
+    }
   };
 
   return (
