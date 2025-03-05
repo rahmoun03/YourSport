@@ -7,6 +7,8 @@ services:
     init: true
     networks:
       - net
+    env_file:
+      - ./.env
   frontend:
     container_name: frontend
     build: ./srcs/frontend

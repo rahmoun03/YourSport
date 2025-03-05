@@ -4,15 +4,19 @@ import Teams from "../pages/Teams";
 import Tournaments from "../pages/Tournaments";
 import Login from "../pages/Login";
 import SignUp from "../pages/SignUp";
+import ProtectedRoute from "./ProtectedRoute";
 
 const AppRouter = () => {
   return (
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/teams" element={<Teams />} />
-        <Route path="/tournaments" element={<Tournaments />} />
-        <Route path="/signup" element={<SignUp />} />
+        {/* Public Routes */}
         <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<SignUp />} />
+
+        {/* Protected Routes */}
+        <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+        <Route path="/teams" element={<ProtectedRoute><Teams /></ProtectedRoute>} />
+        <Route path="/tournaments" element={<ProtectedRoute><Tournaments /></ProtectedRoute>} />
       </Routes>
   );
 };

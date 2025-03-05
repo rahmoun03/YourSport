@@ -1,13 +1,18 @@
 import axios from "axios";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000/api";
+// const API_URL = '';
 
 export const getTeams = async () => {
-  const response = await axios.get(`${API_URL}/teams/`);
+  const response = await axios.get(`/teams/`);
   return response.data;
 };
 
 export const getTournaments = async () => {
-  const response = await axios.get(`${API_URL}/tournaments/`);
+  const response = await axios.get(`/tournaments/`);
+  return response.data;
+};
+
+export const getProfile = async () => {
+  const response = await axios.get(`/auth/api/profile`);
   return response.data;
 };
