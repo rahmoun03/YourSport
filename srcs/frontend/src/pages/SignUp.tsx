@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 
 const API_URL = '/auth/api/sign_up';
 
 const SignUp = () => {
+  const navigate = useNavigate();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -35,8 +36,8 @@ const SignUp = () => {
       if (!response.ok)
         throw new Error("from backend ,Error status : " + response.status);
       
-      const json = response.json();
-      console.log(json);
+      console.log("redirecting to verification ...");
+      navigate('/verify', { state: { email } });
 
     } catch(e) {
       console.log(e.message);
@@ -104,7 +105,7 @@ const SignUp = () => {
 
         <div className="text-center mt-4">
           <button className="w-full flex items-center justify-center gap-2 bg-red-500 text-white py-2 rounded-xl hover:bg-red-600 transition">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google Logo" className="w-5 h-5" /> Sign Up with Google
+          <img src="https://lh3.googleusercontent.com/COxitqgJr1sJnIDe8-jiKhxDx1FrYbtRHKJ9z_hELisAlapwE9LUPh6fcXIfb5vwpbMl4xl9H9TRFPc5NOO8Sb3VSgIBrfRYvW6cUA" alt="Google Logo" className="w-5 h-5" /> Sign Up with Google
           </button>
         </div>
 

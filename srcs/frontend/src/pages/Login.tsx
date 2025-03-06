@@ -1,10 +1,13 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 
 const API_URL = `/auth/api/sign_in`;
 
 const Login = () => {
+  const navigate = useNavigate();
+  const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -30,8 +33,12 @@ const Login = () => {
         throw new Error(`Response status : ${response.status}`);
 
       const json = await response.json();
+      localStorage.setItem("Access-Token", json["Access-Token"]);
+      localStorage.setItem("Refresh-Token", json["Refresh-Token"]);
+      login();
       console.log(json);
-        
+      navigate('/');
+
     } catch (e) {
       console.error(e.message);
     }
@@ -75,7 +82,7 @@ const Login = () => {
 
         <div className="text-center mt-4">
           <button className="w-full flex items-center justify-center gap-2 bg-red-500 text-white py-2 rounded-xl hover:bg-red-600 transition">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google Logo" className="w-5 h-5" /> Login with Google
+          <img src="https://lh3.googleusercontent.com/COxitqgJr1sJnIDe8-jiKhxDx1FrYbtRHKJ9z_hELisAlapwE9LUPh6fcXIfb5vwpbMl4xl9H9TRFPc5NOO8Sb3VSgIBrfRYvW6cUA" alt="Google Logo" className="w-5 h-5" /> Login with Google
           </button>
         </div>
 
