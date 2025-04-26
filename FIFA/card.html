@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FIFA Card</title>
+  <style>
+    body {
+    background: #1c1c1c;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-family: Arial, sans-serif;
+  }
+
+  .fifa-card {
+    position: relative;
+    width: 300px;
+    height: 450px;
+    overflow: hidden;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    border-radius: 20px;
+    color: #443A22;
+    text-align: center;
+    padding: 20px 10px;
+  }
+
+  .fifa-card .rating,
+  .fifa-card .position,
+  .fifa-card .name {
+    font-weight: bold;
+  }
+
+  .fifa-card .rating {
+    color: aliceblue;
+    font-size: 32px;
+    position: absolute;
+    top: 80px;
+    left: 40px;
+  }
+
+  .fifa-card .position {
+    color: aliceblue;
+    font-size: 18px;
+    position: absolute;
+    top: 115px;
+    left: 40px;
+  }
+
+  .fifa-card .image {
+      top: 30px;
+      left: 50%;
+      transform: translate(-50%, 0);
+      position: absolute;
+      /* background-image: url("https://cdn.intra.42.fr/users/7d6ece176a0ad174e2b3aa903ba9418b/arahmoun.JPG"); */
+      /* background-image: url("https://cdn.intra.42.fr/users/1ec9bb857e7596082a50746b1c1b7594/ahanaf.jpeg"); */
+      height: 285px;
+      width: 285px;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: 50% 50%;
+      mix-blend-mode: multiply; 
+      filter: drop-shadow(0 0 5px rgba(0,0,0,0.5));
+      /* clip-path: circle(50%);  */
+      /* shape-outside: ellipse();  */
+      /* -webkit-mask-image: linear-gradient(black, transparent);
+      mask-image: linear-gradient(black, transparent); */
+  }
+
+  .fifa-card .name {
+    color: black;
+      font-size: 24px;
+      position: absolute;
+      font-weight: bold;
+      bottom: 140px;
+      left: 50%;
+      transform: translate(-50%, 0);
+  }
+
+  .fifa-card .stats {
+    left: 50%;
+    transform: translate(-50%, 0);
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    position: absolute;
+    bottom: 95px;
+    font-size: 16px;
+  }
+
+  .fifa-card .stats div{
+    display: flex;
+    flex-direction: column;
+  }
+
+  .fifa-card .stats .stats-nb{
+    font-weight: bold;
+  }
+
+  .fifa-card .league{
+    /* background-image: url("https://um6p.ma/sites/default/files/logo-schools/UM6P_1337.png"); */
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    position: absolute;
+    height: 60px;
+    width: 60px;
+    bottom: 40px;
+    left: 50%;
+    transform: translate(-50%, 0);
+  }
+  </style>
+</head>
+<body>
+    <!-- <div class="fifa-card">
+        <div id='player-img' class="image"></div>
+        <div id='player-rat' class="rating"></div>
+        <div id='player-pos' class="position"></div>
+        <div id='player-name' class="name"></div>
+        <div id='player-stats' class="stats">
+            <div><span>PAC</span><span class="stats-nb">92</span></div>
+            <div><span>SHO</span><span class="stats-nb">88</span></div>
+            <div><span>PAS</span><span class="stats-nb">91</span></div>
+            <div><span>DRI</span><span class="stats-nb">95</span></div>
+            <div><span>DEF</span><span class="stats-nb">72</span></div>
+            <div><span>PHY</span><span class="stats-nb">85</span></div>
+        </div>
+        <div id='player-league' class="league"></div>
+    </div> -->
+</body>
+</html>
+
+<script>
+  const players = [
+    {
+      name : "Ahanaf",
+      rating: "98",
+      position : "RB",
+      image: "https://cdn.intra.42.fr/users/1ec9bb857e7596082a50746b1c1b7594/ahanaf.jpeg",
+      league: "https://um6p.ma/sites/default/files/logo-schools/UM6P_1337.png",
+      background: "silver",
+      stats : {
+        pac: "92",
+        sho: "88",
+        pas: "91",
+        dri: "95",
+        def: "72",
+        phy: "85"
+      }
+    },
+    {
+      name : "Arahmoun",
+      position : "CAM",
+      rating: "103",
+      image: "https://cdn.intra.42.fr/users/7d6ece176a0ad174e2b3aa903ba9418b/arahmoun.JPG",
+      league: "https://um6p.ma/sites/default/files/logo-schools/UM6P_1337.png",
+      background: "gold",
+      stats : {
+        pac: "92",
+        sho: "88",
+        pas: "91",
+        dri: "95",
+        def: "72",
+        phy: "85"
+      }
+    },
+    {
+      name : "Zasabri",
+      position : "LWA",
+      rating: "100",
+      image: "https://cdn.intra.42.fr/users/acc4ad161c4fb89eafe791f7012e8ddb/zasabri.JPG",
+      league: "https://um6p.ma/sites/default/files/logo-schools/UM6P_1337.png",
+      background: "silver",
+      stats : {
+        pac: "92",
+        sho: "88",
+        pas: "94",
+        dri: "95",
+        def: "72",
+        phy: "80"
+      }
+    },
+    {
+      name : "Hfafouri",
+      position : "CB",
+      rating: "100",
+      image: "https://cdn.intra.42.fr/users/a411ce09f3ee0ee07c6bcd8a12fcdd73/hfafouri.jpeg",
+      league: "https://um6p.ma/sites/default/files/logo-schools/UM6P_1337.png",
+      background: "silver",
+      stats : {
+        pac: "92",
+        sho: "88",
+        pas: "94",
+        dri: "95",
+        def: "72",
+        phy: "80"
+      }
+    },
+    {
+      name : "Obelhamid",
+      position : "RWA",
+      rating: "102",
+      image: "https://cdn.intra.42.fr/users/822364e7fa4ece4dac96d24adc99a594/obelhami.jpeg",
+      league: "https://um6p.ma/sites/default/files/logo-schools/UM6P_1337.png",
+      background: "silver",
+      stats : {
+        pac: "92",
+        sho: "88",
+        pas: "94",
+        dri: "98",
+        def: "72",
+        phy: "80"
+      }
+    },
+    {
+      name : "Tchtaibi",
+      position : "LB",
+      rating: "102",
+      image: "https://cdn.intra.42.fr/users/d00282f766753d56196928b23a2f9b00/tchtaibi.jpg",
+      league: "https://um6p.ma/sites/default/files/logo-schools/UM6P_1337.png",
+      background: "gold",
+      stats : {
+        pac: "92",
+        sho: "88",
+        pas: "94",
+        dri: "98",
+        def: "92",
+        phy: "92"
+      }
+    }
+  ]
+  const background = {
+    bronze: "https://cdn3.futbin.com/content/fifa24/img/cards/hd/0_bronze.png?fm=png&ixlib=java-2.1.0&w=644&s=fda25a12ea6634cde4ebffcb90026243",
+    silver: "https://cdn3.futbin.com/content/fifa24/img/cards/hd/0_silver.png?fm=png&ixlib=java-2.1.0&w=644&s=98d901f7f9e21c0c2c97ea5384a735c4",
+    gold: "https://cdn3.futbin.com/content/fifa24/img/cards/hd/0_gold.png?fm=png&ixlib=java-2.1.0&w=644&s=6bf8662c81c95aeec9ab9ee121ee980c"
+  }
+
+  function createfifaCard(){
+    players.forEach(player => {
+      const card = document.createElement('div');
+      card.className = 'fifa-card';
+      card.style.backgroundImage = `url(${background[player.background]})`;
+
+      const name = document.createElement("div");
+      name.className = 'name';
+      name.innerHTML = player.name;
+      
+      const image = document.createElement("div");
+      image.className = 'image';
+      image.style.backgroundImage = `url(${player.image})`;
+
+      const rating = document.createElement("div");
+      rating.className = 'rating';
+      rating.innerHTML = player.rating;
+
+      const position = document.createElement("div");
+      position.className = 'position';
+      position.innerHTML = player.position;
+
+      const stats = document.createElement("div");
+      stats.className = 'stats';
+      stats.innerHTML = `
+            <div><span>PAC</span><span class="stats-nb">${player.stats.pac}</span></div>
+            <div><span>SHO</span><span class="stats-nb">${player.stats.sho}</span></div>
+            <div><span>PAS</span><span class="stats-nb">${player.stats.pas}</span></div>
+            <div><span>DRI</span><span class="stats-nb">${player.stats.dri}</span></div>
+            <div><span>DEF</span><span class="stats-nb">${player.stats.def}</span></div>
+            <div><span>PHY</span><span class="stats-nb">${player.stats.phy}</span></div>
+      `;
+      
+      const league = document.createElement('div');
+      league.className = 'league';
+      league.style.backgroundImage = `url(${player.league})`;
+
+      card.appendChild(name);
+      card.appendChild(image);
+      card.appendChild(rating);
+      card.appendChild(position);
+      card.appendChild(stats);
+      card.appendChild(league);
+      document.body.appendChild(card);
+    });
+  }
+
+  createfifaCard();
+</script>
